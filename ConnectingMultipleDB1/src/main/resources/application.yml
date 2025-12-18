@@ -1,0 +1,16 @@
+server:
+  port: 8090
+
+spring:
+  datasource:
+    user:
+      jdbc-url: jdbc:mysql://localhost:3306/database1
+      username: root
+      password: "${password_root}"
+      driver-class-name: com.mysql.cj.jdbc.Driver
+
+    product:
+      jdbc-url: jdbc:oracle:thin:@localhost:1521:xe
+      username: demouser
+      password: "${password_demouser}"
+      driver-class-name: oracle.jdbc.OracleDriver

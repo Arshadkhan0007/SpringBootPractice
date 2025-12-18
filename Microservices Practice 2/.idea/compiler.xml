@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile default="true" name="Default" enabled="true" />
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="APIGatewayApplication" />
+      </profile>
+      <profile name="Annotation profile for QueryServiceApplicationWithInterceptors" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.42/lombok-1.18.42.jar" />
+        </processorPath>
+        <module name="QueryServiceApplicationWithInterceptors" />
+        <module name="QueryServiceApplication" />
+        <module name="ServiceDiscoveryApplication (1)" />
+        <module name="ServiceDiscoveryApplication" />
+        <module name="ActionServiceApplicationWithInterceptors" />
+        <module name="ActionServiceWithRestTemplate" />
+        <module name="ActionServiceApplicationWIthRetryLogic" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="ActionServiceApplication" target="17" />
+      <module name="ServiceDiscoveryApplication (2)" target="17" />
+      <module name="ServiceDiscoveryApplication (3)" target="17" />
+      <module name="ServiceRegistryApplication" target="17" />
+    </bytecodeTargetLevel>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="APIGatewayApplication" options="-parameters" />
+      <module name="ActionServiceApplication" options="-parameters" />
+      <module name="ActionServiceApplicationWIthRetryLogic" options="-parameters" />
+      <module name="ActionServiceApplicationWithInterceptors" options="-parameters" />
+      <module name="ActionServiceWithRestTemplate" options="-parameters" />
+      <module name="QueryServiceApplication" options="-parameters" />
+      <module name="QueryServiceApplicationWithInterceptors" options="-parameters" />
+      <module name="ServiceDiscoveryApplication" options="-parameters" />
+      <module name="ServiceDiscoveryApplication (1)" options="-parameters" />
+      <module name="ServiceDiscoveryApplication (2)" options="-parameters" />
+      <module name="ServiceDiscoveryApplication (3)" options="-parameters" />
+      <module name="ServiceRegistryApplication" options="-parameters" />
+    </option>
+  </component>
+</project>

@@ -1,0 +1,31 @@
+spring:
+  application:
+    name: OrderMicroService
+
+server:
+  port: 8866
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+
+  cloud:
+    openfeign:
+      circuitbreaker:
+        enabled: true
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      ProductMicroService:
+        sliding-window-size: 2
+        failure-rate-threshold: 50
+        wait-duration-in-open-state: 1s
+        permitted-number-of-calls-in-half-open-state: 2
+
+  timelimiter:
+    instances:
+      ProductMicroService:
+        timeout-duration: 2s
+

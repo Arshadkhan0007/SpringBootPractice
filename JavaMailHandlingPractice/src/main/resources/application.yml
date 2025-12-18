@@ -1,0 +1,26 @@
+server:
+  port: 8090
+
+spring:
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: contactkhan0007@gmail.com
+    password: ${email_password}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+          connectiontimeout: 5000
+          timeout: 5000
+          writetimeout: 5000
+
+  receiver:
+      protocol: imaps
+      host: imap.gmail.com
+      port: 993
+      username: contactkhan0007@gmail.com
+      password: ${email_password}
+      save-directory: "Attachment/"

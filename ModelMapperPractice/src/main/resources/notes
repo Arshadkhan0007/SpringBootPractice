@@ -1,0 +1,113 @@
+✔️ ModelMapper – Implicit vs Explicit Mapping (Complete Notes)
+ModelMapper tries implicit mapping first (automatic mapping based on matching tokens in names). Only after that it applies your explicit mappings (the mappings you manually define).
+Because ModelMapper breaks variable names into tokens (e.g., productId → product + id, prodId → prod + id), sometimes it thinks the fields “match”, which leads to ambiguity issues.
+Example:
+If Entity has: productId
+And DTO has: prodId
+ModelMapper may assume they are the same because of the shared “Id” token.
+To avoid wrong mappings, we define explicit rules or change matching strategy.
+
+1️⃣ Simple Mapping (Same Field Names)
+When source and destination fields have exact same names, ModelMapper maps them implicitly.
+modelMapper.map(source, Destination.class);
+No configuration required.
+
+2️⃣ Custom Mapping (Different Field Names)
+When names differ (productId → prodId), you create PropertyMap:
+ModelMapper mapper = new ModelMapper();
+
+mapper.addMappings(new PropertyMap<Entity, DTO>() {
+    @Override
+    protected void configure() {
+        map().setProdId(source.getProductId());
+    }
+});
+
+This overrides any implicit mapping.
+
+3️⃣ Handling Nested Objects
+If you have something like:
+
+entity.getCategory().getName()
+→ mapped into:
+dto.setCategoryName(...)
+
+mapper.addMappings(new PropertyMap<ProductEntity, ProductDTO>() {
+    @Override
+    protected void configure() {
+        map().setCategoryName(source.getCategory().getName());
+    }
+});
+
+4️⃣ Type Conversion (e.g., String ↔ Date, int ↔ String)
+ModelMapper can automatically convert basic types, but for special conversions, we define a Converter:
+
+Converter<String, LocalDate> stringToDate =
+        ctx -> LocalDate.parse(ctx.getSource());
+
+mapper.addConverter(stringToDate);
+
+5️⃣ Conditional Mapping
+You can tell ModelMapper to map only if a condition is true, e.g., only map if value is not null:
+
+mapper.getConfiguration().setPropertyCondition(ctx -> ctx.getSource() != null);
+
+Or custom conditions:
+
+PropertyCondition<Integer, Integer> positiveOnly =
+        ctx -> ctx.getSource() > 0;
+
+mapper.typeMap(Entity.class, DTO.class)
+      .addMappings(m -> m.when(positiveOnly)
+      .map(Entity::getCount, DTO::setCount));
+
+6️⃣ Custom Transformation Using Converter
+
+(Example: Boolean → String, Enum → String, etc.)
+
+Converter<Boolean, String> booleanToString =
+        ctx -> ctx.getSource() ? "ACTIVE" : "INACTIVE";
+
+mapper.typeMap(UserEntity.class, UserDTO.class)
+      .addMappings(m -> m.using(booleanToString)
+      .map(UserEntity::isActive, UserDTO::setActiveStatus));
+
+7️⃣ Matching Strategy (Important!)
+
+ModelMapper has strategies for how strict the implicit matching should be.
+✔️ Loose (default)
+Split words into tokens, tries best guess → can cause ambiguity.
+✔️ Standard
+Stricter but still flexible.
+✔️ Strict
+Source and destination names must match very closely.
+
+mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+
+8️⃣ setAmbiguityIgnored(true)
+This prevents ModelMapper from throwing errors when it is confused between similar-looking fields.
+mapper.getConfiguration().setAmbiguityIgnored(true);
+Useful when names are similar (productId vs prodId) and ModelMapper can’t decide.
+
+9️⃣ setSkipNullEnabled(true)
+If source field is null → ModelMapper will not overwrite the target field.
+This is helpful for update operations.
+mapper.getConfiguration().setSkipNullEnabled(true);
+
+🔟 Summary (Perfect for Notes)
+ModelMapper first tries implicit mapping (based on tokens in field names).
+Ambiguity happens when different fields look similar due to token matching.
+Explicit mappings always override implicit behavior.
+            
+Mapping Types:
+Simple Mapping – same names
+Custom Mapping – different names via PropertyMap
+Nested Objects – manually map inner fields
+Type Conversion – using Converter
+Conditional Mapping – map only when a condition is true
+Custom Transformation – custom converters (Boolean → String, etc.)
+            
+Configuration Options:
+setMatchingStrategy(STRICT) – prevents accidental matching
+setAmbiguityIgnored(true) – avoids ambiguity errors
+setSkipNullEnabled(true) – ignores null fields during mapping

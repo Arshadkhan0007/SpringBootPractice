@@ -1,0 +1,35 @@
+server:
+  port: 1111
+
+spring:
+  application:
+    name: API-GATEWAY
+
+  cloud:
+    gateway:
+      server:
+        webflux:
+          routes:
+            - id: action_service_route
+              uri: lb://ACTION-SERVICE
+              predicates:
+                - Path=/action/**
+                - Method=POST, PUT, DELETE, GET
+
+            - id: query_service_route
+              uri: lb://QUERY-SERVICE
+              predicates:
+                - Path=/query/**
+                - Method=GET
+
+            - id: action_rest_service_route
+              uri: lb://ACTION-REST-SERVICE
+              predicates:
+                - Path=/action/rest-template/**
+                - Method=POST, PUT, DELETE, GET
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8090/eureka/
+

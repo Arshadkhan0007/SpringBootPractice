@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding">
+    <file url="file://$PROJECT_DIR$/APIGatewayApplication/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/ActionServiceApplication/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/ActionServiceApplicationWIthRetryLogic/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/ActionServiceApplicationWithInterceptors/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/ActionServiceWithRestTemplate/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/QueryServiceApplication/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/QueryServiceApplicationWithInterceptors/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/ServiceDiscoveryApplication/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/ServiceRegistryApplication/src/main/java" charset="UTF-8" />
+  </component>
+</project>

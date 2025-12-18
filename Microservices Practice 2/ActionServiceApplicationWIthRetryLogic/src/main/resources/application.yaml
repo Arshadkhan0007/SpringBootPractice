@@ -1,0 +1,50 @@
+server:
+  port: 8084
+
+spring:
+  application:
+    name: ACTION-SERVICE-WITH-RETRY
+  cloud:
+    openfeign:
+      circuitbreaker:
+        enabled: false
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8090/eureka/
+
+resilience4j:
+  # Define the Order: CircuitBreaker (Outer) -> Retry (Inner)
+  # Lower value = Higher Priority (Executes First)
+  circuitbreaker:
+    circuitBreakerAspectOrder: 1
+    instances:
+      QUERY-SERVICE:
+        failureRateThreshold: 50
+        waitDurationInOpenState: 10s
+        slidingWindowSize: 10
+        minimumNumberOfCalls: 5
+        permittedNumberOfCallsInHalfOpenState: 3
+
+  retry:
+    retryAspectOrder: 2  # Retry sits INSIDE the Circuit Breaker
+    instances:
+      QUERY-SERVICE:
+        maxAttempts: 3
+        waitDuration: 2s
+        enableExponentialBackoff: true
+        exponentialBackoffMultiplier: 2
+        retryExceptions:
+          - java.io.IOException                       # 1. Network/Connection Failures
+          - feign.FeignException.ServiceUnavailable   # 2. HTTP 503 (Server Overloaded/Maintenance)
+          - feign.FeignException.GatewayTimeout       # 3. HTTP 504 (Load Balancer Timeout)
+          - feign.RetryableException                  # 4. Custom "Retry-After" scenarios
+        # Do NOT ignore 404 here if you want the Fallback to eventually handle it.
+        # But if you want 404 to bubble up instantly, keep ignoring it.
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"

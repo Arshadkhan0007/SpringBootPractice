@@ -1,0 +1,45 @@
+server:
+  port: 8086
+
+spring:
+  application:
+    name: ACTION-SERVICE-WITH-INTERCEPTOR
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8090/eureka/
+
+resilience4j:
+  circuitbreaker:
+    circuitBreakerAspectOrder: 1
+    instances:
+      QUERY-SERVICE-WITH-INTERCEPTOR:
+        minimumNumberOfCalls: 5
+        slidingWindowSize: 10
+        failureRateThreshold: 50
+        waitDurationInOpenState: 10s
+        permittedNumberOfCallsInHalfOpenState: 3
+
+  retry:
+    retryAspectOrder: 2
+    instances:
+      QUERY-SERVICE-WITH-INTERCEPTOR:
+        maxAttempts: 3
+        waitDuration: 2s
+        enableExponentialBackoff: true
+        exponentialBackoffMultiplier: 2
+        retryExceptions:
+          - org.springframework.web.client.ResourceAccessException  # 1. Network/IO Failures
+          - org.springframework.web.client.HttpServerErrorException # 2. HTTP 5xx Errors
+          - java.lang.IllegalStateException                         # 3. Client-side LoadBalancer Failures
+          - java.io.IOException                                     # 4. Catch-all for underlying IO
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+
+

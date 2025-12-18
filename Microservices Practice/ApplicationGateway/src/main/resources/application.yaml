@@ -1,0 +1,27 @@
+server:
+  port: 8093
+
+spring:
+  application:
+    name: ApplicationGateway
+
+  cloud:
+    gateway:
+      server:
+        webflux:
+          routes:
+            - id: order_service_route
+              uri: lb://ORDER-SERVICE
+              predicates:
+                - Path=/orders/**
+            - id: user_service_route
+              uri: lb://USER-SERVICE
+              predicates:
+                  - Path=/users/**
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8090/eureka/
+
+
